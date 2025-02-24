@@ -1,7 +1,7 @@
 <template>
 	<!-- FIXME: default styles contain both `position: relative` & `absolute` at equal specificity with unpredictable order -->
 	<MapboxMap
-		mapId="map"
+		map-id="map"
 		style="position: absolute"
 		:options="{
 			style: 'mapbox://styles/mapbox/outdoors-v12',
