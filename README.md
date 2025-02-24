@@ -1,75 +1,34 @@
-# Nuxt Minimal Starter
+# PlowTheTrail.com
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Documentation
 
-## Setup
+- [Nuxt introduction](https://nuxt.com/docs/getting-started/introduction)
+- [Nuxt UI](https://ui.nuxt.com/getting-started)
+- [`nuxt-mapbox`](https://alexlavoie42.github.io/Nuxt-Mapbox/)
+- [Mapbox GL](https://docs.mapbox.com/mapbox-gl-js/guides)
 
-Make sure to install dependencies:
+## Development
 
-```bash
-# npm
-npm install
+Development requires a recent version of [Bun](https://bun.sh/docs/installation).
 
-# pnpm
-pnpm install
+```shell
+# Make sure to install dependencies first
+$ bun install
 
-# yarn
-yarn install
+# Then, start the development server
+$ bun run dev
 
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+# Format and lint code before committing
+$ bun run lint  # or lint:fix
+$ bun run format
 ```
 
 ## Production
 
-Build the application for production:
+The `main` branch is automatically deployed to production by Cloudflare. Other branches get deployed as preview deployments.
 
-```bash
-# npm
-npm run build
+Deployments can be previewed locally with:
 
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+```shell
+$ bun run build && bun run preview
 ```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
