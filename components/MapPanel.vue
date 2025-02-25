@@ -9,8 +9,10 @@ defineProps<{
 </script>
 
 <template>
-	<div class="relative z-10 w-fit max-w-xs p-4 glass border rounded-md">
-		<div class="flex justify-between gap-2 mb-2">
+	<div
+		class="relative z-10 w-fit max-w-xs p-4 flex flex-col gap-3 glass border rounded-md"
+	>
+		<div class="flex justify-between gap-2">
 			<span class="font-semibold">{{ title }}</span>
 			<UButton
 				color="gray"

@@ -77,6 +77,7 @@ function submitReport() {
 					<NewReportForm />
 					<UButton
 						label="Submit"
+						block
 						:loading="reportStore.submitting"
 						@click="submitReport"
 					/>
