@@ -1,11 +1,13 @@
 <script setup lang="ts">
+const store = useReportStore();
+
 type Condition = {
 	value: number;
 	label: string;
 	help: string;
 };
 
-const conditionOptions = [
+const conditions = [
 	{ value: 3, label: "Excellent", help: "Clear of snow and ice" },
 	{ value: 2, label: "Passable", help: "Some uneven or icy sections" },
 	{
@@ -20,14 +22,16 @@ const conditionOptions = [
 	},
 ] satisfies Condition[];
 
-const condition = ref();
 const help = computed(() => {
-	return conditionOptions.find((c) => c.value == condition.value)?.help ?? "";
+	return conditions.find((c) => c.value == store.condition)?.help ?? "";
 });
 </script>
 
 <template>
 	<UFormGroup label="Current conditions" :help required>
-		<USelect v-model="condition" :options="conditionOptions" />
+		<USelect v-model.number="store.condition" :options="conditions" />
+	</UFormGroup>
+	<UFormGroup label="Notes">
+		<UTextarea v-model="store.notes" autoresize :maxrows="5" />
 	</UFormGroup>
 </template>
