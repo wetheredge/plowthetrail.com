@@ -20,19 +20,34 @@ const mapCenter: [number, number] =
 		? [queryLon, queryLat]
 		: [-68.137343, 45.137451];
 
-const newReport = ref("report" in query);
+const map = useTemplateRef("map");
+const reportStore = useReportStore();
+
+function submitReport() {
+	reportStore.submitting = true;
+	const report = {
+		lat: reportStore.lat,
+		lon: reportStore.lon,
+		condition: reportStore.condition,
+		notes: reportStore.notes,
+	};
+	setTimeout(() => {
+		console.log("new report", report);
+		reportStore.open = false;
+	}, 2000);
+}
 </script>
 
 <template>
 	<div>
-		<TrailMap :center="mapCenter" :zoom="mapCenter ? 10 : 7" />
+		<TrailMap ref="map" :center="mapCenter" :zoom="mapCenter ? 10 : 7" />
 		<TopBar>
 			<UTooltip text="New report">
 				<UButton
 					color="primary"
 					variant="ghost"
 					icon="i-heroicons-plus"
-					@click="newReport = true"
+					@click="reportStore.show"
 				/>
 			</UTooltip>
 			<UTooltip text="Toggle filters panel">
@@ -48,12 +63,17 @@ const newReport = ref("report" in query);
 			<template #top-left>
 				<!-- TODO: fix width changing with help text -->
 				<MapPanel
-					v-if="newReport"
+					v-if="reportStore.open"
 					title="New report"
-					@close="newReport = false"
+					@close="reportStore.open = false"
 				>
 					<p>Drag the marker to choose a location</p>
 					<NewReportForm />
+					<UButton
+						label="Submit"
+						:loading="reportStore.submitting"
+						@click="submitReport"
+					/>
 				</MapPanel>
 			</template>
 
