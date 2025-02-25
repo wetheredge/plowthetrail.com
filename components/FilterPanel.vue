@@ -8,17 +8,7 @@ const timePeriod = ref(timePeriods[0]);
 </script>
 
 <template>
-	<div class="relative z-10 w-fit m-4 ml-auto p-4 glass border rounded-md">
-		<div class="flex justify-between gap-2 mb-2">
-			<span class="font-semibold">Filters</span>
-			<UButton
-				color="gray"
-				variant="ghost"
-				icon="i-heroicons-x-mark"
-				@click="$emit('close')"
-			/>
-		</div>
-
+	<MapPanel title="Filters">
 		<UFormGroup label="Time period:">
 			<UButtonGroup>
 				<UButton
@@ -30,5 +20,5 @@ const timePeriod = ref(timePeriods[0]);
 				/>
 			</UButtonGroup>
 		</UFormGroup>
-	</div>
+	</MapPanel>
 </template>
