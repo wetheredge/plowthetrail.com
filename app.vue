@@ -1,5 +1,6 @@
 <template>
 	<NuxtPage />
+	<UNotifications />
 </template>
 
 <style lang="postcss">

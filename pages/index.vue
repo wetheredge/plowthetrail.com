@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const toast = useToast();
+
 const showFilters = ref(false);
 
 const query = useRoute().query;
@@ -34,6 +36,10 @@ function submitReport() {
 	setTimeout(() => {
 		console.log("new report", report);
 		reportStore.open = false;
+		toast.add({
+			id: "report-submitted",
+			title: "Report submitted!",
+		});
 	}, 2000);
 }
 </script>
