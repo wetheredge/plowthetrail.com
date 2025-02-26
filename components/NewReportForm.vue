@@ -2,12 +2,14 @@
 const store = useReportStore();
 
 type Condition = {
-	value: number;
+	value?: number;
 	label: string;
 	help: string;
+	disabled?: boolean;
 };
 
 const conditions = [
+	{ label: "", help: "", disabled: true },
 	{ value: 3, label: "Excellent", help: "Clear of snow and ice" },
 	{ value: 2, label: "Passable", help: "Some uneven or icy sections" },
 	{
