@@ -30,7 +30,12 @@ const help = computed(() => {
 </script>
 
 <template>
-	<UFormGroup label="Current conditions" :help required>
+	<UFormGroup
+		label="Current conditions"
+		required
+		:help
+		:error="store.showErrors && store.condition == null"
+	>
 		<USelect v-model.number="store.condition" :options="conditions" />
 	</UFormGroup>
 	<UFormGroup label="Notes">

@@ -27,12 +27,17 @@ const map = useTemplateRef("map");
 const reportStore = useReportStore();
 
 function submitReport() {
+	if (reportStore.condition == null) {
+		reportStore.showErrors = true;
+		return;
+	}
+
 	reportStore.submitting = true;
 	const report = {
 		lat: reportStore.lat,
 		lon: reportStore.lon,
 		condition: reportStore.condition,
-		notes: reportStore.notes,
+		notes: reportStore.notes.trim(),
 	};
 	setTimeout(() => {
 		console.log("new report", report);

@@ -6,8 +6,9 @@ export const useReportStore = defineStore("report", {
 		submitting: false,
 		lat: 0,
 		lon: 0,
-		condition: undefined,
+		condition: undefined as number | undefined,
 		notes: "",
+		showErrors: false,
 	}),
 	actions: {
 		hide() {
