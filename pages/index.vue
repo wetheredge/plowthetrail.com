@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const toast = useToast();
+const isMobile = useIsMobile();
 
 const showFilters = ref(false);
 
@@ -35,7 +36,7 @@ function submitReport() {
 	};
 	setTimeout(() => {
 		console.log("new report", report);
-		reportStore.open = false;
+		reportStore.hide();
 		toast.add({
 			id: "report-submitted",
 			title: "Report submitted!",
@@ -46,7 +47,6 @@ function submitReport() {
 
 <template>
 	<div>
-		<TrailMap ref="map" :center="mapCenter" :zoom="mapCenter ? 10 : 7" />
 		<TopBar>
 			<UTooltip text="New report">
 				<UButton
@@ -65,13 +65,43 @@ function submitReport() {
 				/>
 			</UTooltip>
 		</TopBar>
+		<div
+			:class="[
+				$style.sheet,
+				{ [$style.open]: reportStore.open && isMobile },
+				'fixed w-full z-10 p-4 flex flex-col gap-3 glass border',
+			]"
+		>
+			<div class="grid grid-cols-3 gap-2">
+				<UButton
+					color="gray"
+					variant="ghost"
+					icon="i-heroicons-x-mark"
+					class="mr-auto"
+					@click="reportStore.hide"
+				/>
+				<span class="font-semibold text-center">New report</span>
+				<UButton
+					label="Submit"
+					class="ml-auto"
+					:loading="reportStore.submitting"
+					@click="submitReport"
+				/>
+			</div>
+
+			<div class="flex flex-col gap-[inherit] overflow-y-scroll">
+				<p>Drag the map to choose a location</p>
+				<NewReportForm />
+			</div>
+		</div>
+		<TrailMap ref="map" :center="mapCenter" :zoom="mapCenter ? 10 : 7" />
 		<MapPanelContainer>
 			<template #top-left>
 				<!-- TODO: fix width changing with help text -->
 				<MapPanel
-					v-if="reportStore.open"
+					v-if="reportStore.open && !isMobile"
 					title="New report"
-					@close="reportStore.open = false"
+					@close="reportStore.hide"
 				>
 					<p>Drag the marker to choose a location</p>
 					<NewReportForm />
@@ -90,3 +120,40 @@ function submitReport() {
 		</MapPanelContainer>
 	</div>
 </template>
+
+<style module lang="postcss">
+.sheet {
+	height: 40vh;
+	bottom: -40vh;
+
+	&.open {
+		bottom: 0;
+	}
+}
+
+.sheet,
+:has(.sheet)
+	:global(
+		#map
+			:is(
+				.mapboxgl-ctrl-bottom-left,
+				.mapboxgl-ctrl-bottom,
+				.mapboxgl-ctrl-bottom-right
+			)
+	) {
+	transition: bottom theme(transitionDuration.DEFAULT)
+		theme(transitionTimingFunction.DEFAULT);
+}
+
+:has(.sheet.open)
+	:global(
+		#map
+			:is(
+				.mapboxgl-ctrl-bottom-left,
+				.mapboxgl-ctrl-bottom,
+				.mapboxgl-ctrl-bottom-right
+			)
+	) {
+	bottom: 40vh;
+}
+</style>

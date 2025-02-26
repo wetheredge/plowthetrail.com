@@ -1,22 +1,20 @@
 import { defineStore } from "pinia";
 
-const init = {
-	open: false,
-	submitting: false,
-	lat: 0,
-	lon: 0,
-	condition: undefined,
-	notes: "",
-};
-
 export const useReportStore = defineStore("report", {
-	state: () => init,
+	state: () => ({
+		open: false,
+		submitting: false,
+		lat: 0,
+		lon: 0,
+		condition: undefined,
+		notes: "",
+	}),
 	actions: {
+		hide() {
+			this.$reset();
+		},
 		show() {
-			this.$patch({
-				...init,
-				open: true,
-			});
+			this.open = true;
 		},
 	},
 });
