@@ -1,29 +1,47 @@
 <script setup lang="ts">
-import { Marker } from "mapbox-gl";
+import { Marker, type LngLat, type Map } from "mapbox-gl";
 
 const props = defineProps<{
 	center: [number, number];
 	zoom: number;
 }>();
 
+const isMobile = useIsMobile();
+
 const map = useMapboxRef("map");
 const reportStore = useReportStore();
-
 let reportMarker: Marker | undefined;
+
+function setReportCoords(point: LngLat) {
+	const [lon, lat] = point.toArray();
+	reportStore.$patch({ lon, lat });
+}
+
+useMapbox("map", (map) => {
+	function recenterReport(event: { target: Map }) {
+		if (isMobile.value) {
+			const center = event.target.getCenter();
+			reportMarker?.setLngLat(center);
+			setReportCoords(center);
+		}
+	}
+
+	map.on("move", recenterReport);
+	map.on("drag", recenterReport);
+	map.on("zoom", recenterReport);
+});
+
 watch(
 	() => reportStore.open,
 	(open) => {
 		if (open) {
 			const marker = new Marker({
 				anchor: "bottom",
-				draggable: true,
+				draggable: !isMobile.value,
 			});
 			marker.setLngLat(map.value!.getCenter());
 			marker.addTo(map.value!);
-			marker.on("dragend", () => {
-				const [lon, lat] = marker.getLngLat().toArray();
-				reportStore.$patch({ lon, lat });
-			});
+			marker.on("dragend", () => setReportCoords(marker.getLngLat()));
 			reportMarker = marker;
 		} else {
 			reportMarker?.remove();
@@ -34,8 +52,14 @@ watch(
 
 watch(
 	() => reportStore.submitting,
-	(submitting) => reportMarker?.setDraggable(!submitting),
+	(submitting) => {
+		if (!isMobile) {
+			reportMarker?.setDraggable(!submitting);
+		}
+	},
 );
+
+watch(isMobile, (isMobile) => reportMarker?.setDraggable(!isMobile));
 </script>
 
 <template>
