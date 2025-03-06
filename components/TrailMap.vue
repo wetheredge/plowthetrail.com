@@ -50,7 +50,7 @@ watch(
 			reportMarker?.remove();
 			reportMarker = undefined;
 		}
-	},
+	}
 );
 
 watch(
@@ -59,7 +59,7 @@ watch(
 		if (!isMobile) {
 			reportMarker?.setDraggable(!submitting);
 		}
-	},
+	}
 );
 
 watch(isMobile, (isMobile) => reportMarker?.setDraggable(!isMobile));
