@@ -26,27 +26,38 @@ const mapCenter: [number, number] =
 const map = useTemplateRef("map");
 const reportStore = useReportStore();
 
-function submitReport() {
+async function submitReport() {
 	if (reportStore.condition == null) {
 		reportStore.showErrors = true;
 		return;
 	}
 
 	reportStore.submitting = true;
-	const report = {
-		lat: reportStore.lat,
-		lon: reportStore.lon,
-		condition: reportStore.condition,
-		notes: reportStore.notes.trim(),
-	};
-	setTimeout(() => {
+	try {
+		const report = await $fetch(`/api/reports`, {
+			method: "POST",
+			body: {
+				lat: reportStore.lat,
+				lon: reportStore.lon,
+				condition: reportStore.condition,
+				notes: reportStore.notes.trim(),
+			},
+		});
+
 		console.log("new report", report);
 		reportStore.hide();
 		toast.add({
 			id: "report-submitted",
 			title: "Report submitted!",
 		});
-	}, 2000);
+	} catch (err) {
+		console.error(`Failed to submit report: ${err}`);
+		reportStore.submitting = false;
+		toast.add({
+			id: "report-failed",
+			title: "Report failed",
+		});
+	}
 }
 </script>
 
