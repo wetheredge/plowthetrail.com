@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { toDb } from "./_common";
 
 enum Condition {
 	Unusable,
@@ -27,15 +28,16 @@ export default eventHandler(async (event) => {
 		});
 	}
 
+	const report = toDb({
+		lat: result.data.lat,
+		lon: result.data.lon,
+		condition: result.data.condition,
+		notes: result.data.notes,
+		createdAt: new Date(),
+	});
 	return await useDrizzle()
 		.insert(tables.reports)
-		.values({
-			lat: result.data.lat,
-			lon: result.data.lon,
-			condition: result.data.condition,
-			notes: result.data.notes,
-			createdAt: new Date(),
-		})
+		.values(report)
 		.returning()
 		.get();
 });
