@@ -24,35 +24,35 @@ const mapCenter: [number, number] =
 		: [-68.137343, 45.137451];
 
 const map = useTemplateRef("map");
-const reportStore = useReportStore();
+const draftReport = useDraftReport();
 
 async function submitReport() {
-	if (reportStore.condition == null) {
-		reportStore.showErrors = true;
+	if (draftReport.condition == null) {
+		draftReport.showErrors = true;
 		return;
 	}
 
-	reportStore.submitting = true;
+	draftReport.submitting = true;
 	try {
 		const report = await $fetch(`/api/reports`, {
 			method: "POST",
 			body: {
-				lat: reportStore.lat,
-				lon: reportStore.lon,
-				condition: reportStore.condition,
-				notes: reportStore.notes.trim(),
+				lat: draftReport.lat,
+				lon: draftReport.lon,
+				condition: draftReport.condition,
+				notes: draftReport.notes.trim(),
 			},
 		});
 
 		console.log("new report", report);
-		reportStore.hide();
+		draftReport.hide();
 		toast.add({
 			id: "report-submitted",
 			title: "Report submitted!",
 		});
 	} catch (err) {
 		console.error(`Failed to submit report: ${err}`);
-		reportStore.submitting = false;
+		draftReport.submitting = false;
 		toast.add({
 			id: "report-failed",
 			title: "Report failed",
@@ -69,7 +69,7 @@ async function submitReport() {
 					color="primary"
 					variant="ghost"
 					icon="i-heroicons-plus"
-					@click="reportStore.show"
+					@click="draftReport.show"
 				/>
 			</UTooltip>
 			<UTooltip text="Toggle filters panel">
@@ -84,7 +84,7 @@ async function submitReport() {
 		<div
 			:class="[
 				$style.sheet,
-				{ [$style.open]: reportStore.open && isMobile },
+				{ [$style.open]: draftReport.open && isMobile },
 				'fixed w-full z-10 p-4 flex flex-col gap-3 glass border',
 			]"
 		>
@@ -94,13 +94,13 @@ async function submitReport() {
 					variant="ghost"
 					icon="i-heroicons-x-mark"
 					class="mr-auto"
-					@click="reportStore.hide"
+					@click="draftReport.hide"
 				/>
 				<span class="font-semibold text-center">New report</span>
 				<UButton
 					label="Submit"
 					class="ml-auto"
-					:loading="reportStore.submitting"
+					:loading="draftReport.submitting"
 					@click="submitReport"
 				/>
 			</div>
@@ -115,16 +115,16 @@ async function submitReport() {
 			<template #top-left>
 				<!-- TODO: fix width changing with help text -->
 				<MapPanel
-					v-if="reportStore.open && !isMobile"
+					v-if="draftReport.open && !isMobile"
 					title="New report"
-					@close="reportStore.hide"
+					@close="draftReport.hide"
 				>
 					<p>Drag the marker to choose a location</p>
 					<NewReportForm />
 					<UButton
 						label="Submit"
 						block
-						:loading="reportStore.submitting"
+						:loading="draftReport.submitting"
 						@click="submitReport"
 					/>
 				</MapPanel>
