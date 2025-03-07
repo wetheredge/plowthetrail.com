@@ -17,7 +17,7 @@ function setReportCoords(point: LngLat) {
 	draftReport.$patch({ lon, lat });
 }
 
-useMapbox("map", (map) => {
+useMapbox("map", async (map) => {
 	function recenterReport(event: { target: Map }) {
 		if (isMobile.value) {
 			const center = event.target.getCenter();
@@ -29,6 +29,13 @@ useMapbox("map", (map) => {
 	map.on("move", recenterReport);
 	map.on("drag", recenterReport);
 	map.on("zoom", recenterReport);
+
+	const reports = await $fetch("/api/reports");
+	for (const report of reports) {
+		new Marker({ anchor: "bottom" })
+			.setLngLat([report.lon, report.lat])
+			.addTo(map);
+	}
 });
 
 watch(
