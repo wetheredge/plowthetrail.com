@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export const useReportStore = defineStore("report", {
+export const useDraftReport = defineStore("draft-report", {
 	state: () => ({
 		open: false,
 		submitting: false,

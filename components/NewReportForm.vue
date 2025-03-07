@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const store = useReportStore();
+const store = useDraftReport();
 
 type Condition = {
 	value?: number;

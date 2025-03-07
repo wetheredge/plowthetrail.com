@@ -9,19 +9,19 @@ const props = defineProps<{
 const isMobile = useIsMobile();
 
 const map = useMapboxRef("map");
-const reportStore = useReportStore();
-let reportMarker: Marker | undefined;
+const draftReport = useDraftReport();
+let draftReportMarker: Marker | undefined;
 
 function setReportCoords(point: LngLat) {
 	const [lon, lat] = point.toArray();
-	reportStore.$patch({ lon, lat });
+	draftReport.$patch({ lon, lat });
 }
 
 useMapbox("map", (map) => {
 	function recenterReport(event: { target: Map }) {
 		if (isMobile.value) {
 			const center = event.target.getCenter();
-			reportMarker?.setLngLat(center);
+			draftReportMarker?.setLngLat(center);
 			setReportCoords(center);
 		}
 	}
@@ -32,7 +32,7 @@ useMapbox("map", (map) => {
 });
 
 watch(
-	() => reportStore.open,
+	() => draftReport.open,
 	(open) => {
 		if (open) {
 			const center = map.value!.getCenter();
@@ -45,24 +45,24 @@ watch(
 			marker.setLngLat(center);
 			marker.addTo(map.value!);
 			marker.on("dragend", () => setReportCoords(marker.getLngLat()));
-			reportMarker = marker;
+			draftReportMarker = marker;
 		} else {
-			reportMarker?.remove();
-			reportMarker = undefined;
+			draftReportMarker?.remove();
+			draftReportMarker = undefined;
 		}
 	}
 );
 
 watch(
-	() => reportStore.submitting,
+	() => draftReport.submitting,
 	(submitting) => {
 		if (!isMobile) {
-			reportMarker?.setDraggable(!submitting);
+			draftReportMarker?.setDraggable(!submitting);
 		}
 	}
 );
 
-watch(isMobile, (isMobile) => reportMarker?.setDraggable(!isMobile));
+watch(isMobile, (isMobile) => draftReportMarker?.setDraggable(!isMobile));
 </script>
 
 <template>
