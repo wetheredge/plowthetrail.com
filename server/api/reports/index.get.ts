@@ -1,3 +1,6 @@
+import { fromDb } from "./_common";
+
 export default eventHandler(async () => {
-	return useDrizzle().select().from(tables.reports).all();
+	const reports = await useDrizzle().select().from(tables.reports).all();
+	return reports.map(fromDb);
 });
