@@ -7,6 +7,7 @@ export const tables = schema;
 
 export function useDrizzle() {
 	return drizzle({
+		casing: "snake_case",
 		connection: {
 			url: process.env.DATABASE_URL!,
 			authToken: process.env.DATABASE_AUTH_TOKEN!,
