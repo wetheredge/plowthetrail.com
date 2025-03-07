@@ -35,11 +35,14 @@ watch(
 	() => reportStore.open,
 	(open) => {
 		if (open) {
+			const center = map.value!.getCenter();
+			setReportCoords(center);
+
 			const marker = new Marker({
 				anchor: "bottom",
 				draggable: !isMobile.value,
 			});
-			marker.setLngLat(map.value!.getCenter());
+			marker.setLngLat(center);
 			marker.addTo(map.value!);
 			marker.on("dragend", () => setReportCoords(marker.getLngLat()));
 			reportMarker = marker;
