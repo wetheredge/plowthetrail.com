@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as v from "valibot";
 import { toDb } from "./_common";
 
 enum Condition {
@@ -8,31 +8,31 @@ enum Condition {
 	Excellent,
 }
 
-const reportSchema = z.object({
-	lat: z.number(),
-	lon: z.number(),
-	condition: z.nativeEnum(Condition),
-	notes: z.string(),
+const reportSchema = v.object({
+	lat: v.number(),
+	lon: v.number(),
+	condition: v.enum(Condition),
+	notes: v.string(),
 });
 
 export default eventHandler(async (event) => {
 	const result = await readValidatedBody(event, (body) =>
-		reportSchema.safeParse(body)
+		v.safeParse(reportSchema, body),
 	);
 
 	if (!result.success) {
 		throw createError({
 			statusCode: 400,
 			message: "Invalid report",
-			data: result.error.issues,
+			data: result.issues,
 		});
 	}
 
 	const report = toDb({
-		lat: result.data.lat,
-		lon: result.data.lon,
-		condition: result.data.condition,
-		notes: result.data.notes,
+		lat: result.output.lat,
+		lon: result.output.lon,
+		condition: result.output.condition,
+		notes: result.output.notes,
 		createdAt: new Date(),
 	});
 	return await useDrizzle()
