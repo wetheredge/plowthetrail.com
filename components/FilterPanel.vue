@@ -8,7 +8,7 @@ const timePeriod = ref(timePeriods[0]);
 </script>
 
 <template>
-	<MapPanel title="Filters">
+	<MapPanel title="Filters" @close="$emit('close')">
 		<UFormGroup label="Time period:">
 			<UButtonGroup>
 				<UButton
