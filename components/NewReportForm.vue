@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import type { Condition } from "#shared/condition";
+
 const store = useDraftReport();
 
-type Condition = {
-	value?: number;
+type ConditionOption = {
+	value?: Condition;
 	label: string;
 	help: string;
 	disabled?: boolean;
@@ -22,7 +24,7 @@ const conditions = [
 		label: "Unusable",
 		help: "Impassable due to deep snow, ice, or other hazards",
 	},
-] satisfies Condition[];
+] satisfies ConditionOption[];
 
 const help = computed(() => {
 	return conditions.find((c) => c.value == store.condition)?.help ?? "";
