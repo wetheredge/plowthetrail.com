@@ -1,12 +1,6 @@
 import * as v from "valibot";
+import { Condition } from "#shared/condition";
 import { toDb } from "./_common";
-
-enum Condition {
-	Unusable,
-	Poor,
-	Passable,
-	Excellent,
-}
 
 const reportSchema = v.object({
 	lat: v.number(),
